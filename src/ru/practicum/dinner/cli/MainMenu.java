@@ -63,7 +63,7 @@ public class MainMenu extends AbstractReplRunner {
                     println(lunchSetName);
                     meals.forEach(this::printMeal);
                     int cost = meals.stream().mapToInt(Meal::getPrice).sum();
-                    println("\t Стоимость: " + cost);
+                    println("\t Стоимость: " + cost + " 💎");
                 });
     }
 
