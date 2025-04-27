@@ -1,14 +1,13 @@
 package ru.practicum.dinner.cli;
 
 import ru.practicum.dinner.components.MealsRepository;
+import ru.practicum.dinner.dto.Meal;
+import ru.practicum.dinner.dto.MealType;
+import ru.practicum.dinner.services.Converter;
 import ru.practicum.dinner.services.DefaultMenuGenerator;
 import ru.practicum.dinner.services.DinnerConstructor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MainMenu extends AbstractReplRunner {
     private final MealsRepository mealsRepository;
@@ -49,50 +48,57 @@ public class MainMenu extends AbstractReplRunner {
 
     private void generateSets() {
         int amount = queryIntFromStdin("Введите количество наборов, которые нужно сгенерировать");
-        List<String> mealTypes = new ArrayList<>(mealsRepository.getAvailableMealTypes());
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < mealTypes.size(); i++) {
-            sb.append(String.format("%d - %s ", i + 1, mealTypes.get(i)));
-        }
 
-        String chosenTypesString = queryStringFromStdin("Введите номера типов блюд через запятую [" + sb.toString().trim() + "]");
+        Set<MealType> availableMealTypes = mealsRepository.getAvailableMealTypes();
+        String numberedMealTypesString = Converter.mealTypesToNumberedString(availableMealTypes);
 
-        Set<String> chosenTypes = Arrays.stream(chosenTypesString.split(","))
-                .map(it -> {
-                    if (it.isEmpty()) {
-                        throw new IllegalArgumentException("Номер типа блюда не может быть пустым");
-                    }
-                    int chosenTypeIndex = Integer.parseInt(it.trim());
-                    return mealTypes.get(chosenTypeIndex - 1);
-                })
-                .collect(Collectors.toSet());
+        String chosenTypesString = queryStringFromStdin("Введите номера типов блюд через запятую [" + numberedMealTypesString + "]");
+        Set<MealType> chosenMealTypes = Converter.commaSeparatedNumbersToMealTypes(availableMealTypes, chosenTypesString);
 
-        dinnerConstructor.generateLunchSets(chosenTypes, amount)
+        dinnerConstructor.generateLunchSets(chosenMealTypes, amount)
                 .forEach((lunchSetName, meals) -> {
                     println(lunchSetName);
-                    println(meals);
+                    meals.forEach(this::printMeal);
+                    int cost = meals.stream().mapToInt(Meal::getPrice).sum();
+                    println("\t Стоимость: " + cost);
                 });
     }
 
     private void addNewMeal() {
-        String mealType = queryStringFromStdin("Введите тип блюда");
-        if (mealType == null || mealType.isEmpty()) {
+        String mealTypeName = queryStringFromStdin("Введите тип блюда");
+        if (mealTypeName == null || mealTypeName.isEmpty()) {
             throw new IllegalArgumentException("Тип блюда не может быть пустым");
         }
+
+        MealType mealType = mealsRepository.getMealTypeByName(mealTypeName);
 
         String mealName = queryStringFromStdin("Введите название блюда");
         if (mealName == null || mealName.isEmpty()) {
             throw new IllegalArgumentException("Название блюда не может быть пустым");
         }
 
-        mealsRepository.addMeal(mealType, mealName);
+        String mealDescription = queryStringFromStdin("Введите описание блюда");
+        int mealPrice = queryIntFromStdin("Введите цену блюда");
+
+        mealsRepository.addMeal(mealType, new Meal(mealName, mealDescription, mealPrice));
     }
 
     private void listMeals() {
-        for (String mealType : mealsRepository.getAvailableMealTypes()) {
+        for (MealType mealType : mealsRepository.getAvailableMealTypes()) {
             println("# " + mealType + ":");
             mealsRepository.getMealsByType(mealType)
-                    .forEach(it -> println("\t" + it));
+                    .forEach(this::printMeal);
         }
+    }
+
+    private void printMeal(Meal meal) {
+        println(
+                String.format(
+                        "\t%s\n\t\t%s\n\t\t%d 💎",
+                        meal.getName(),
+                        meal.getDescription(),
+                        meal.getPrice()
+                )
+        );
     }
 }

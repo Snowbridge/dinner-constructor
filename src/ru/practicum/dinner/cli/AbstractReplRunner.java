@@ -19,7 +19,7 @@ public abstract class AbstractReplRunner {
     final Scanner scanner = new Scanner(System.in);
     final String menuHeader;
 
-    int level = 0;
+    final int level = 0;
 
     public AbstractReplRunner(String menuHeader, String[] menu) {
         this.menuHeader = menuHeader;
@@ -65,7 +65,9 @@ public abstract class AbstractReplRunner {
 
     int queryIntFromStdin(String prompt) {
         print(prompt + ": ");
-        return scanner.nextInt();
+        int n = scanner.nextInt();
+        scanner.nextLine();
+        return n;
     }
 
     int queryIntFromStdin(String prompt, int min, int max) {
@@ -78,7 +80,7 @@ public abstract class AbstractReplRunner {
 
     String queryStringFromStdin(String prompt) {
         print(prompt + ": ");
-        return scanner.next();
+        return scanner.nextLine();
     }
 
     void print(String line) {
