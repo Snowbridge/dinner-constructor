@@ -33,4 +33,9 @@ public class MealsRepository {
         }
         meals.get(mealType).add(mealName);
     }
+
+    public void generateDefaultMeals() {
+        // Напитки
+        HashSet<String> defaultMeals = new HashSet<>();
+    }
 }

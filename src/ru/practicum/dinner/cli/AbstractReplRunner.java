@@ -1,6 +1,9 @@
 package ru.practicum.dinner.cli;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
  * REPL - Read-Eval-Print-Loop
@@ -75,15 +78,7 @@ public abstract class AbstractReplRunner {
 
     String queryStringFromStdin(String prompt) {
         print(prompt + ": ");
-        return scanner.nextLine();
-    }
-
-    String queryEnumFromStdin(String prompt, Set<String> enumValues) {
-        String value = queryStringFromStdin(prompt);
-        if (!enumValues.contains(value)) {
-            throw new StringIndexOutOfBoundsException("Значение не входит в перечень допустимых " + enumValues);
-        }
-        return value;
+        return scanner.next();
     }
 
     void print(String line) {
