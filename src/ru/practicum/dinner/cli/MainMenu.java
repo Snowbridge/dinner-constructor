@@ -47,6 +47,9 @@ public class MainMenu extends AbstractReplRunner {
     }
 
     private void generateSets() {
+        if (mealsRepository.isEmpty())
+            throw new IllegalStateException("Не возможно сгенерировать наборы из пустого меню");
+
         int amount = queryIntFromStdin("Введите количество наборов, которые нужно сгенерировать");
 
         Set<MealType> availableMealTypes = mealsRepository.getAvailableMealTypes();

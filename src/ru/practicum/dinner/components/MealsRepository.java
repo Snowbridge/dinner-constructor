@@ -60,4 +60,8 @@ public class MealsRepository {
     public void clear() {
         meals.clear();
     }
+
+    public boolean isEmpty() {
+        return meals.isEmpty();
+    }
 }
