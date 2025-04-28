@@ -42,13 +42,13 @@ public class DinnerConstructor {
         return lunchSets;
     }
 
-    private List<Meal> generateSet(Set<MealType> chosenTypes) {
+    private List<Meal> generateSet(Set<MealType> mealTypesToComposeSetFrom) {
         Random rand = new Random();
-        List<Meal> lunchSet = new ArrayList<>(chosenTypes.size());
-        chosenTypes.stream()
+        List<Meal> lunchSet = new ArrayList<>(mealTypesToComposeSetFrom.size());
+        mealTypesToComposeSetFrom.stream()
                 .sorted(Comparator.comparingInt(MealType::getOrder))
-                .forEach(mealType -> {
-                    Set<Meal> meals = mealsRepository.getMealsByType(mealType);
+                .forEach(currentMealType -> {
+                    Set<Meal> meals = mealsRepository.getMealsByType(currentMealType);
                     Meal currentMeal = meals.stream()
                             .skip(rand.nextLong(0, meals.size()))
                             .findFirst().orElseThrow();

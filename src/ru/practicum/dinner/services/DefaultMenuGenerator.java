@@ -23,13 +23,18 @@ public class DefaultMenuGenerator {
 
     public void generate() {
         mealsRepository.clear();
+        
         generateFirstMeals(mealsRepository.getMealTypeByName("Первое"));
         generateMainMeals(mealsRepository.getMealTypeByName("Второе"));
         generateSnacks(mealsRepository.getMealTypeByName("Закуски"));
         generateDrinks(mealsRepository.getMealTypeByName("Напитки"));
         generateDeserts(mealsRepository.getMealTypeByName("Десерт"));
+        generateSpecial(mealsRepository.getMealTypeByName("Блюдо от шефа"));
+    }
+
+    private void generateSpecial(MealType mealType) {
         mealsRepository.addMeal(
-                mealsRepository.getMealTypeByName("Блюдо от шефа"),
+                mealType,
                 new Meal(
                         "Бубенцы Лесного Духа",
                         "Секретное блюдо дня, которое Грум готовит только для избранных. Ингредиенты зависят от того, что удалось найти в лесу сегодня.",
