@@ -101,7 +101,7 @@ public class MainMenu extends AbstractReplRunner {
     private void printMeal(Meal meal) {
         println(
                 String.format(
-                        "\t%s\n\t\t%s\n\t\t%d 💎",
+                        "\t%s\n\t\t%s\n\t\t%d ракушек",
                         meal.getName(),
                         meal.getDescription(),
                         meal.getPrice()
