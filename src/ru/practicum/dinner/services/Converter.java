@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class Converter {
 
-    public Converter() {
+    private Converter() {
         throw new RuntimeException("Utility class");
     }
 

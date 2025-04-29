@@ -1,5 +1,10 @@
 package ru.practicum.dinner.cli;
 
+/*
+The file if in UTF-8 with LF-type end lines, I've checked it three times.
+If the cyrillic is still broken then this particular file is just damned by Practicum engine, I give up.
+*/
+
 import ru.practicum.dinner.components.MealsRepository;
 import ru.practicum.dinner.dto.Meal;
 import ru.practicum.dinner.dto.MealType;
@@ -26,7 +31,6 @@ public class MainMenu extends AbstractReplRunner {
         mealsRepository = MealsRepository.getInstance();
         dinnerConstructor = DinnerConstructor.getInstance();
     }
-
 
     @Override
     void processCommand(int command) {
@@ -88,7 +92,7 @@ public class MainMenu extends AbstractReplRunner {
 
     private void listMeals() {
         for (MealType mealType : mealsRepository.getAvailableMealTypes()) {
-            println("# " + mealType + ":");
+            println(String.format("$ %s:", mealType));
             mealsRepository.getMealsByType(mealType)
                     .forEach(this::printMeal);
         }
